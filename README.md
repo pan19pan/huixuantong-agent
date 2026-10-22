@@ -4,7 +4,7 @@
 
 面向全行业公众号运营人员的**会议宣发 AI 助手**：本地处理会议材料，不上云、不外泄，自动整合提炼，一键生成安全合规、重点突出的公众号宣发稿。
 
-👉 **在线体验**：https://USERNAME.github.io/huixuantong-agent/
+👉 **在线体验**：`https://<你的用户名>.github.io/huixuantong-agent/`（开启 GitHub Pages 后生效）
 
 ---
 
@@ -106,7 +106,7 @@ huixuantong-agent/
 ## 本地运行
 
 ```bash
-git clone https://github.com/USERNAME/huixuantong-agent.git
+git clone https://github.com/<你的用户名>/huixuantong-agent.git
 cd huixuantong-agent
 # 直接双击 docs/index.html，或：
 python -m http.server 8080 --directory docs
