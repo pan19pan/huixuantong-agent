@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>会宣通 Agent · 会议材料一键成稿，安全不外泄</title>
+<style>
+:root{
+  --primary:#1f5fd0; --primary-dark:#17459c; --primary-soft:#eaf1fc;
+  --green:#0f9d58; --green-soft:#e6f4ec;
+  --amber:#b26a00; --amber-soft:#fff4dd; --amber-border:#f0c46a;
+  --red:#c62828; --red-soft:#fdecec;
+  --ink:#1c2330; --ink-2:#4a5568; --ink-3:#8a94a6;
+  --line:#e4e8ef; --bg:#f5f7fa; --card:#ffffff;
+  --radius:14px; --shadow:0 4px 18px rgba(28,35,48,.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px;}
+
+/* ===== 顶部导航 ===== */
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:var(--ink);cursor:pointer;}
+.logo .dot{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--primary),#3d8bfd);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.nav-tabs{display:flex;gap:6px;}
+.nav-tabs button{border:none;background:transparent;padding:8px 16px;border-radius:8px;font-size:14px;color:var(--ink-2);cursor:pointer;font-family:inherit;}
+.nav-tabs button:hover{background:var(--primary-soft);color:var(--primary);}
+.nav-tabs button.active{background:var(--primary);color:#fff;font-weight:600;}
+.local-badge{font-size:12px;color:var(--green);background:var(--green-soft);padding:4px 10px;border-radius:20px;font-weight:600;display:flex;align-items:center;gap:5px;}
+@media(max-width:760px){.local-badge{display:none;}.nav-tabs button{padding:8px 10px;font-size:13px;}}
+
+.view{display:none;}
+.view.active{display:block;}
+
+/* ===== 落地页 ===== */
+.hero{background:linear-gradient(160deg,#0d2b5e 0%,#1f5fd0 70%,#3d8bfd 100%);color:#fff;padding:72px 0 64px;text-align:center;}
+.hero .kicker{display:inline-block;font-size:13px;letter-spacing:2px;background:rgba(255,255,255,.15);padding:5px 14px;border-radius:20px;margin-bottom:22px;}
+.hero h1{font-size:40px;line-height:1.3;margin-bottom:14px;}
+.hero .slogan{font-size:18px;opacity:.92;margin-bottom:30px;}
+.hero .slogan b{color:#ffd76a;}
+.hero .hero-badges{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.hero .hero-badges span{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);padding:8px 18px;border-radius:24px;font-size:14px;}
+.btn{display:inline-flex;align-items:center;gap:8px;border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-primary:hover{background:var(--primary-dark);}
+.btn-light{background:#fff;color:var(--primary);}
+.btn-light:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.18);}
+.btn-ghost{background:var(--primary-soft);color:var(--primary);}
+.btn:disabled{background:#c9d2e0;color:#fff;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-sm{padding:7px 14px;font-size:13px;border-radius:8px;}
+.btn-outline{background:#fff;color:var(--ink-2);border:1px solid var(--line);}
+
+.section{padding:56px 0;}
+.section-title{text-align:center;margin-bottom:36px;}
+.section-title h2{font-size:26px;margin-bottom:8px;}
+.section-title p{color:var(--ink-3);font-size:14px;}
+.grid{display:grid;gap:18px;}
+.grid-3{grid-template-columns:repeat(3,1fr);}
+.grid-2{grid-template-columns:repeat(2,1fr);}
+@media(max-width:860px){.grid-3,.grid-2{grid-template-columns:1fr;}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);}
+.pain .num{font-size:13px;font-weight:700;color:#fff;background:var(--red);width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.pain h3{font-size:16px;margin-bottom:8px;}
+.pain p{font-size:13.5px;color:var(--ink-2);}
+.solve{border-top:3px solid var(--green);}
+.solve h3{font-size:16px;margin-bottom:8px;color:var(--green);}
+.solve p{font-size:13.5px;color:var(--ink-2);}
+.hl-tag{display:inline-block;font-size:12px;font-weight:600;color:var(--primary);background:var(--primary-soft);padding:3px 10px;border-radius:6px;margin-bottom:10px;}
+.flow-strip{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
+.flow-strip .node{background:var(--primary-soft);color:var(--primary);font-size:13px;font-weight:600;padding:8px 14px;border-radius:8px;}
+.flow-strip .node.human{background:var(--green-soft);color:var(--green);}
+.flow-strip .arr{color:var(--ink-3);}
+.boundary{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+.boundary span{background:#fff;border:1px dashed var(--line);color:var(--ink-2);padding:8px 16px;border-radius:8px;font-size:13px;}
+.footer{text-align:center;padding:36px 0 48px;color:var(--ink-3);font-size:13px;}
+.footer b{color:var(--ink-2);}
+
+/* ===== 演示区 ===== */
+.demo-head{background:linear-gradient(160deg,#0d2b5e,#1f5fd0);color:#fff;padding:40px 0 88px;}
+.demo-head h1{font-size:26px;margin-bottom:8px;}
+.demo-head p{opacity:.9;font-size:14px;max-width:640px;}
+.demo-body{margin-top:-52px;padding-bottom:60px;}
+.stepper{display:flex;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 12px;overflow-x:auto;gap:4px;}
+.step-item{flex:1;min-width:96px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;border:none;background:transparent;font-family:inherit;padding:4px;}
+.step-item .cir{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:#eef1f6;color:var(--ink-3);border:2px solid transparent;transition:.2s;}
+.step-item .lbl{font-size:12px;color:var(--ink-3);white-space:nowrap;}
+.step-item.done .cir{background:var(--green-soft);color:var(--green);}
+.step-item.current .cir{background:var(--primary);color:#fff;box-shadow:0 0 0 4px var(--primary-soft);}
+.step-item.current .lbl{color:var(--primary);font-weight:700;}
+.step-item.locked{cursor:not-allowed;opacity:.55;}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-top:18px;padding:28px;}
+.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+.panel-head h2{font-size:20px;}
+.panel-head .sub{font-size:13px;color:var(--ink-3);margin-top:4px;}
+.panel-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:24px;flex-wrap:wrap;}
+.stepno{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:var(--primary);color:#fff;border-radius:7px;font-size:12px;font-weight:700;margin-right:8px;vertical-align:2px;}
+
+/* 上传 */
+.mat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;}
+.mat-card{border:1.5px solid var(--line);border-radius:12px;padding:16px;display:flex;gap:12px;align-items:flex-start;background:#fbfcfe;transition:.15s;}
+.mat-card .ico{font-size:26px;}
+.mat-card h4{font-size:14px;margin-bottom:2px;}
+.mat-card p{font-size:12px;color:var(--ink-3);}
+.mat-card .ok{margin-left:auto;font-size:12px;color:var(--green);background:var(--green-soft);border-radius:6px;padding:2px 8px;white-space:nowrap;}
+.safe-note{margin-top:16px;display:flex;gap:10px;align-items:center;background:var(--green-soft);border:1px solid #bfe3cf;color:#0b7a45;border-radius:10px;padding:12px 16px;font-size:13.5px;}
+.dropzone{border:2px dashed #c4cfe0;border-radius:12px;padding:26px;text-align:center;color:var(--ink-3);font-size:13.5px;background:#fafbfd;margin-bottom:18px;}
+
+/* 解析动画 */
+.parse-box{background:#fbfcfe;border:1px solid var(--line);border-radius:12px;padding:22px;}
+.parse-line{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink-3);padding:7px 0;}
+.parse-line .st{width:20px;height:20px;border-radius:50%;border:2px solid #d4dbe6;flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;}
+.parse-line.doing .st{border-color:var(--primary);border-top-color:transparent;animation:spin .7s linear infinite;}
+.parse-line.done .st{background:var(--green);border-color:var(--green);}
+.parse-line.done{color:var(--ink);}
+.parse-line.doing{color:var(--primary);}
+@keyframes spin{to{transform:rotate(360deg);}}
+.progress{height:6px;background:#edf0f5;border-radius:4px;overflow:hidden;margin-bottom:16px;}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--primary),#3d8bfd);transition:width .5s;}
+.meeting-info h3{font-size:15px;margin:18px 0 10px;display:flex;align-items:center;gap:8px;}
+.meeting-info h3::before{content:"";width:4px;height:16px;background:var(--primary);border-radius:2px;}
+.mi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;}
+.mi-cell{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13px;}
+.mi-cell b{display:block;font-size:12px;color:var(--ink-3);margin-bottom:4px;font-weight:600;}
+ul.clean{list-style:none;}
+ul.clean li{padding:5px 0 5px 22px;position:relative;font-size:13.5px;color:var(--ink-2);}
+ul.clean li::before{content:"";position:absolute;left:4px;top:13px;width:6px;height:6px;border-radius:50%;background:var(--primary);}
+
+/* 敏感提示 */
+.risk-card{border:1.5px solid var(--amber-border);background:var(--amber-soft);border-radius:12px;padding:16px 18px;margin-bottom:14px;}
+.risk-card.lock{border-color:#e4b5b5;background:var(--red-soft);}
+.risk-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+.risk-top h4{font-size:14.5px;}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:2px 10px;border-radius:20px;}
+.tag.risk{background:#ffe9c7;color:var(--amber);border:1px solid var(--amber-border);}
+.tag.risk-high{background:#fde3e3;color:var(--red);border:1px solid #f0b9b9;}
+.tag.src{background:#eef1f6;color:var(--ink-2);}
+.tag.ok{background:var(--green-soft);color:var(--green);}
+.risk-card p.raw{font-size:13.5px;color:var(--ink-2);background:rgba(255,255,255,.75);border-radius:8px;padding:10px 12px;margin-bottom:8px;}
+.risk-card .adv{font-size:12.5px;color:var(--amber);display:flex;gap:6px;align-items:flex-start;}
+.risk-card .adv.lock{color:var(--red);}
+.ai-note{display:flex;gap:10px;background:#f2f5fa;border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--ink-2);margin:16px 0 4px;}
+.ai-note b{color:var(--primary);}
+
+/* 素材池 */
+.pool-row{border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px;transition:.15s;}
+.pool-row.in{border-color:#bfe3cf;background:#fbfffc;}
+.pool-row.blocked{border-color:#f0b9b9;background:var(--red-soft);opacity:.92;}
+.pool-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.pool-top .cb{width:19px;height:19px;accent-color:var(--green);cursor:pointer;flex:none;}
+.pool-top h4{font-size:14px;}
+.pool-top .spacer{flex:1;}
+.pool-row p.raw{font-size:13.5px;color:var(--ink-2);margin-top:8px;background:#f7f9fc;border-radius:8px;padding:9px 12px;}
+.pool-row textarea{width:100%;margin-top:8px;font-family:inherit;font-size:13.5px;color:var(--ink);border:1px solid var(--primary);border-radius:8px;padding:9px 12px;resize:vertical;min-height:60px;}
+.link-btn{border:none;background:transparent;color:var(--primary);font-size:12.5px;cursor:pointer;font-family:inherit;padding:0;}
+.lock-note{font-size:12.5px;color:var(--red);margin-top:8px;display:flex;gap:6px;}
+.pool-sum{display:flex;gap:14px;align-items:center;background:#f2f5fa;border-radius:10px;padding:12px 18px;font-size:13.5px;color:var(--ink-2);flex-wrap:wrap;margin:16px 0 4px;}
+.pool-sum b{color:var(--green);font-size:16px;}
+.pool-sum .sep{color:#c4cfe0;}
+
+/* 宣发稿预览 */
+.gen-cover{position:relative;}
+.gen-cover .veil{position:absolute;inset:0;background:rgba(255,255,255,.75);backdrop-filter:blur(2px);border-radius:12px;display:flex;align-items:center;justify-content:center;z-index:5;}
+.gen-cover .veil span{background:var(--primary);color:#fff;font-size:14px;font-weight:600;padding:10px 22px;border-radius:10px;box-shadow:var(--shadow);}
+.wxa{max-width:640px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+.wxa-head{padding:14px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);background:#fafbfd;}
+.wxa-head .avatar{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#1f5fd0,#3d8bfd);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;}
+.wxa-head .meta b{font-size:13px;display:block;}
+.wxa-head .meta span{font-size:11px;color:var(--ink-3);}
+.wxa-body{padding:26px 26px 20px;}
+.wxa-body h1.title{font-size:21px;line-height:1.45;margin-bottom:10px;}
+.wxa-body .meta-line{font-size:12px;color:var(--ink-3);padding-bottom:16px;border-bottom:1px solid #f0f2f6;margin-bottom:18px;}
+.lead{background:var(--primary-soft);border-left:3px solid var(--primary);border-radius:0 8px 8px 0;padding:12px 16px;font-size:14px;color:#28405f;margin-bottom:18px;}
+.art-p{font-size:15px;color:#2b2f36;margin-bottom:16px;padding:8px 10px;margin-left:-10px;margin-right:-10px;border-radius:8px;border:1px dashed transparent;cursor:default;position:relative;transition:.12s;}
+.art-p:hover{background:#f6f9ff;border-color:#cfe0fb;}
+.art-p .risk-chip{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--amber);background:var(--amber-soft);border:1px solid var(--amber-border);border-radius:5px;padding:1px 7px;margin-right:6px;vertical-align:1px;cursor:help;}
+.art-p .restored-chip{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--green);background:var(--green-soft);border:1px solid #bfe3cf;border-radius:5px;padding:1px 7px;margin-right:6px;vertical-align:1px;}
+.art-p.replaced{background:#f4fbf6;border-color:#cdebd8;}
+.wxa-foot{padding:0 26px 22px;font-size:12px;color:var(--ink-3);display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.gen-note{margin-top:16px;display:flex;gap:10px;background:var(--green-soft);border:1px solid #bfe3cf;color:#0b7a45;border-radius:10px;padding:12px 16px;font-size:13px;}
+.hover-hint{margin-top:14px;text-align:center;font-size:13px;color:var(--primary);background:var(--primary-soft);border-radius:10px;padding:10px;}
+
+/* 溯源面板 */
+#trace-panel{position:absolute;z-index:80;width:min(440px,92%);background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 36px rgba(28,35,48,.18);padding:16px 18px;display:none;font-size:13px;}
+#trace-panel .tp-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+#trace-panel .tp-head b{font-size:13.5px;}
+#trace-panel .tp-sec{font-size:11px;font-weight:700;color:var(--ink-3);letter-spacing:1px;margin:10px 0 4px;}
+#trace-panel .tp-raw{background:#f7f9fc;border:1px solid var(--line);border-radius:8px;padding:10px 12px;color:var(--ink-2);font-size:13px;}
+#trace-panel .tp-actions{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;}
+.tp-close{position:absolute;top:10px;right:12px;border:none;background:transparent;font-size:16px;color:var(--ink-3);cursor:pointer;}
+
+/* 日志 */
+.log-table{width:100%;border-collapse:collapse;font-size:13px;}
+.log-table th{background:#f2f5fa;text-align:left;padding:10px 12px;font-size:12px;color:var(--ink-2);border-bottom:1px solid var(--line);}
+.log-table td{padding:10px 12px;border-bottom:1px solid #f0f2f6;color:var(--ink-2);vertical-align:top;}
+.log-table td:first-child{white-space:nowrap;color:var(--ink-3);font-size:12px;}
+.log-table .op{font-weight:600;color:var(--ink);}
+.log-empty{text-align:center;color:var(--ink-3);font-size:13px;padding:24px;}
+.tripart{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+@media(max-width:760px){.tripart{grid-template-columns:1fr;}}
+.tripart .tp-item{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:14px;font-size:12.5px;color:var(--ink-2);}
+.tripart .tp-item b{display:block;font-size:13px;margin-bottom:4px;}
+.tripart .tp-item .arrow{color:var(--primary);font-weight:700;}
+
+/* 文档页 */
+.doc-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.doc-tabs button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 16px;font-size:13.5px;cursor:pointer;font-family:inherit;color:var(--ink-2);}
+.doc-tabs button.active{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:600;}
+.doc-body h2{font-size:19px;margin-bottom:14px;}
+.doc-body h3{font-size:15px;margin:18px 0 8px;color:var(--primary-dark);}
+.doc-body p,.doc-body li{font-size:14px;color:var(--ink-2);}
+.doc-body ul{padding-left:20px;margin:6px 0;}
+.doc-body .quote{background:#f7f9fc;border-left:3px solid var(--primary);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13.5px;color:var(--ink-2);margin:10px 0;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <div class="logo" onclick="showView('home')"><span class="dot">会</span>会宣通 Agent</div>
+    <div class="nav-tabs">
+      <button id="tab-home" class="active" onclick="showView('home')">产品介绍</button>
+      <button id="tab-demo" onclick="showView('demo')">交互演示</button>
+      <button id="tab-docs" onclick="showView('docs')">产品文档</button>
+    </div>
+    <span class="local-badge">🔒 全程本地处理 · 数据不上云</span>
+  </div>
+</nav>
+
+<!-- ===================== 落地页 ===================== -->
+<section id="view-home" class="view active">
+  <div class="hero">
+    <div class="wrap">
+      <span class="kicker">面向全行业公众号运营人员的会议宣发 AI 助手</span>
+      <h1>会宣通 Agent</h1>
+      <p class="slogan">会议材料一键成稿 ｜ <b>安全不外泄</b> ｜ 公众号宣发更高效</p>
+      <div class="hero-badges">
+        <span>📄 多源材料解析</span><span>🛡️ 敏感内容提示</span><span>✍️ 一键生成宣发稿</span><span>🔍 悬浮即时溯源</span>
+      </div>
+      <div style="margin-top:34px;">
+        <button class="btn btn-light" onclick="showView('demo')">▶ 进入交互演示</button>
+        <button class="btn btn-light" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.35);" onclick="showView('docs')">查看产品文档</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section"><div class="wrap">
+    <div class="section-title"><h2>三大核心痛点，一个产品解决</h2><p>民企、国企、事业单位、机关单位 —— 所有需要把「会议材料」变成「公众号宣发稿」的人</p></div>
+    <div class="grid grid-3">
+      <div class="card pain"><span class="num">1</span><h3>材料多、杂、散，人工整理成本极高</h3><p>发言稿、纪要、笔记、图片分散各处，无法逐字逐句阅读，摘抄整合耗时巨大。</p></div>
+      <div class="card pain"><span class="num">2</span><h3>不敢把内部材料交给外部 AI</h3><p>企业怕商业秘密泄露，政企怕敏感信息外流，外部 AI 工具是保密红线。</p></div>
+      <div class="card pain"><span class="num">3</span><h3>纪要不能直接发，宣发要抓重点</h3><p>公众号需要结构清晰、突出会议精神与传播亮点，普通纪要只是信息堆砌。</p></div>
+    </div>
+  </div></div>
+
+  <div class="section" style="padding-top:0;"><div class="wrap">
+    <div class="grid grid-3">
+      <div class="card solve"><h3>→ AI 本地解析提炼</h3><p>自动解析文档、图片 OCR、笔记，整合提炼会议主题、核心决策、重点工作、会议精神与宣发重点。</p></div>
+      <div class="card solve"><h3>→ 全程本地，不上云不外泄</h3><p>材料处理全程在本地完成，数据不上传外网；AI 只提示敏感内容，不做保密决策。</p></div>
+      <div class="card solve"><h3>→ 一键生成可发布初稿</h3><p>基于人工确认的素材池生成公众号稿件，不编造、不扩展、不脑补，每段可溯源。</p></div>
+    </div>
+  </div></div>
+
+  <div class="section" style="padding-top:0;"><div class="wrap">
+    <div class="section-title"><h2>核心运转流程</h2><p>绿色节点为人工环节 —— AI 只整理提示，人来确认决策</p></div>
+    <div class="flow-strip">
+      <span class="node">上传会议材料</span><span class="arr">→</span>
+      <span class="node">AI 本地解析</span><span class="arr">→</span>
+      <span class="node">敏感信息提示</span><span class="arr">→</span>
+      <span class="node human">人工确认素材池</span><span class="arr">→</span>
+      <span class="node">一键生成宣发稿</span><span class="arr">→</span>
+      <span class="node human">审核发布 · 全程留痕</span>
+    </div>
+  </div></div>
+
+  <div class="section" style="padding-top:0;"><div class="wrap">
+    <div class="section-title"><h2>为什么值得选它</h2><p>不止「能用」，而是「敢用」—— 六重安全设计</p></div>
+    <div class="grid grid-3">
+      <div class="card"><span class="hl-tag">架构层</span><h3 style="font-size:15px;margin-bottom:6px;">三层隔离机制</h3><p style="font-size:13px;color:var(--ink-2);">原始材料 → 人工筛选 → 素材池 → 生成。生成模块只能读取人工确认的内容，从架构上禁止模型私取未放行片段。</p></div>
+      <div class="card"><span class="hl-tag">权责层</span><h3 style="font-size:15px;margin-bottom:6px;">AI 只提示，不决策</h3><p style="font-size:13px;color:var(--ink-2);">风险标签永久跟随对应段落，即使进入素材池，复审时依然可见，不会在生成环节消失。</p></div>
+      <div class="card"><span class="hl-tag">交互层</span><h3 style="font-size:15px;margin-bottom:6px;">悬浮即时溯源</h3><p style="font-size:13px;color:var(--ink-2);">鼠标悬浮任意段落，弹出原始原文与风险记录，hover 即可对照「AI 改写 VS 原始素材」。</p></div>
+      <div class="card"><span class="hl-tag">修正层</span><h3 style="font-size:15px;margin-bottom:6px;">一键替换回原文</h3><p style="font-size:13px;color:var(--ink-2);">发现 AI 润色偏离本意？一键还原为素材池原文，替换动作完整写入操作日志。</p></div>
+      <div class="card"><span class="hl-tag">生成层</span><h3 style="font-size:15px;margin-bottom:6px;">事实与润色分离</h3><p style="font-size:13px;color:var(--ink-2);">事实层全部绑定来源与风险标记，润色层只调句式排版，不新增业务事实。</p></div>
+      <div class="card"><span class="hl-tag">合规层</span><h3 style="font-size:15px;margin-bottom:6px;">全程溯源留痕</h3><p style="font-size:13px;color:var(--ink-2);">每段可回溯原始材料，修改操作不可篡改，满足民企合规与政企三审三校要求。</p></div>
+    </div>
+  </div></div>
+
+  <div class="section" style="padding-top:0;"><div class="wrap">
+    <div class="section-title"><h2>产品边界</h2><p>克制，是安全产品的第一美德</p></div>
+    <div class="boundary">
+      <span>✕ 不替代人工审核</span><span>✕ 不替代保密审查</span><span>✕ 不替代三审三校</span><span>✕ 数据不上外网</span>
+      <span style="border-style:solid;border-color:#bfe3cf;background:var(--green-soft);color:#0b7a45;">✓ 只做：材料整理 + 风险提示 + 宣发初稿生成</span>
+    </div>
+  </div></div>
+
+  <div class="footer"><div class="wrap">
+    <b>会宣通 Agent</b> · 产品设计与交互演示 ｜ 会议材料一键成稿 · 安全不外泄 · 公众号宣发更高效<br>
+    设计与制作：潘诗语 ｜ 本演示为作品集展示用途，示例数据均为虚构
+  </div></div>
+</section>
+
+<!-- ===================== 交互演示 ===================== -->
+<section id="view-demo" class="view">
+  <div class="demo-head"><div class="wrap">
+    <h1>交互演示 · 完整跑通一次会议宣发</h1>
+    <p>示例场景：某科技公司召开 2026 年四季度经营工作会议，宣传岗需要把 4 份会议材料整理成一篇公众号宣发稿 —— 快、准、且不泄密。</p>
+  </div></div>
+
+  <div class="demo-body"><div class="wrap">
+    <div class="stepper" id="stepper"></div>
+    <div class="panel" id="panel"></div>
+    <div id="trace-panel"></div>
+  </div></div>
+</section>
+
+<!-- ===================== 产品文档 ===================== -->
+<section id="view-docs" class="view">
+  <div class="section"><div class="wrap">
+    <div class="section-title"><h2>产品文档</h2><p>完整的产品定位 · 运转方式 · 策略 · 价值衡量体系</p></div>
+    <div class="doc-tabs">
+      <button class="active" data-doc="0" onclick="showDoc(0)">① 产品定位说明</button>
+      <button data-doc="1" onclick="showDoc(1)">② 产品运转方式</button>
+      <button data-doc="2" onclick="showDoc(2)">③ 产品策略</button>
+      <button data-doc="3" onclick="showDoc(3)">④ 价值衡量（含加分项）</button>
+    </div>
+    <div class="panel doc-body" id="doc-body"></div>
+  </div></div>
+</section>
+
+<script>
+/* =========================================================
+   数据层
+========================================================= */
+const MATERIALS = [
+  {id:'m1', icon:'📄', name:'总经理发言稿.docx', type:'文档', desc:'会议主报告全文'},
+  {id:'m2', icon:'📑', name:'会议纪要.pdf',      type:'文档', desc:'行政整理版会议纪要'},
+  {id:'m3', icon:'🖼️', name:'会议板书照片.jpg',  type:'图片', desc:'白板要点 · 已本地 OCR'},
+  {id:'m4', icon:'✏️', name:'宣传岗速记笔记.txt', type:'笔记', desc:'对外宣传口径速记'},
+];
+const MAT_NAME = Object.fromEntries(MATERIALS.map(m=>[m.id, m.name]));
+const MAT_TYPE = Object.fromEntries(MATERIALS.map(m=>[m.id, m.type]));
+
+const SEGMENTS = [
+  {id:'s1', src:'m1', label:'三季度经营回顾', risk:null,
+   raw:'三季度公司整体经营稳中有进，新签约客户 128 家，重点行业解决方案交付满意度达 96%，为全年目标达成打下坚实基础。',
+   ai:'今年第三季度，公司经营延续稳中有进的良好态势：新签约客户达 128 家，重点行业解决方案交付满意度高达 96%，为全年目标的实现奠定了坚实基础。'},
+  {id:'s2', src:'m1', label:'灵犀 2.0 发布计划', risk:null,
+   raw:'新一代产品「灵犀2.0」已完成全部研发与内测工作，将于 12 月 18 日正式面向市场发布。',
+   ai:'备受期待的新一代产品「灵犀 2.0」已完成研发与内测，将于 12 月 18 日正式与广大客户见面。'},
+  {id:'s3', src:'m1', label:'B 轮融资进展', risk:['商业秘密','未官宣事项'],
+   raw:'公司已完成 B 轮融资交割，投后估值约 35 亿元，预计明年上半年启动 C 轮融资。此事在官宣前一律不得外传。',
+   ai:'公司在资本层面取得重要进展，为下一阶段的高速发展储备了充足动能。'},
+  {id:'s4', src:'m2', label:'四季度营收目标', risk:['内部数据'],
+   raw:'四季度签约目标由 9000 万上调至 1.2 亿元（内部口径，未经审计，不得对外披露）。',
+   ai:'会上对四季度经营目标作出部署，要求全员聚焦关键指标、全力冲刺年度任务。'},
+  {id:'s5', src:'m2', label:'区域深耕计划', risk:null,
+   raw:'会议决定：四季度启动「区域深耕计划」，在西南、华中两地新增 6 个服务网点，重点服务中小企业数字化转型需求。',
+   ai:'会议明确，四季度正式启动「区域深耕计划」，在西南、华中两大区域新增 6 个服务网点，以更贴近的服务支持中小企业数字化转型。'},
+  {id:'s6', src:'m3', label:'板书 · 三大要求', risk:null,
+   raw:'白板要点：① 以客户为中心 ② 以质量为生命线 ③ 以人才为第一资源',
+   ai:'会议强调，全体干部员工要坚持「以客户为中心、以质量为生命线、以人才为第一资源」，把要求落实到日常经营的每一个环节。'},
+  {id:'s7', src:'m3', label:'客户降价方案分歧', risk:['内部讨论','不宜公开'], blocked:true,
+   raw:'内部讨论：针对某集团续约，销售部提出降价 15% 方案，与产品部存在较大分歧，暂缓执行，须防止消息外泄影响整体报价体系。',
+   ai:null},
+  {id:'s8', src:'m4', label:'对外宣传口径', risk:null,
+   raw:'宣传口径：本次会议对外只讲「战略聚焦、稳健增长、产品升级」三个关键词，营收、融资数据一律不提。',
+   ai:'围绕「战略聚焦、稳健增长、产品升级」三大关键词，公司将持续向客户与合作伙伴传递长期价值。'},
+];
+const DEFAULT_INCLUDED = {s1:true,s2:true,s3:false,s4:false,s5:true,s6:true,s8:true}; // s7 高风险隔离
+
+const TITLE = '聚焦战略 稳健增长 ｜ 公司召开 2026 年四季度经营工作会议';
+const LEAD  = '10 月 21 日，公司召开 2026 年四季度经营工作会议，总结三季度经营情况，部署四季度重点工作。会议围绕「战略聚焦、稳健增长、产品升级」，明确了下一阶段的发展方向与落地举措。公司管理层及各部门负责人参加会议。';
+
+const DOCS = [
+{title:'产品定位说明', html:`
+<h3>产品名称</h3><p><b>会宣通 Agent</b><br>Slogan：会议材料一键成稿｜安全不外泄｜公众号宣发更高效</p>
+<h3>目标用户</h3><ul>
+<li>民营企业、私企、集团公司：公众号运营、品牌宣传、行政文秘</li>
+<li>事业单位、国企、机关单位：宣传岗、文稿整理人员</li>
+<li>所有需要把「会议材料」变成「公众号宣发稿」的工作人员</li></ul>
+<h3>用户真实痛点</h3><ul>
+<li>会议材料多、杂、散：发言稿、纪要、图片、笔记等，人工整理耗时巨大</li>
+<li>无法逐字逐句阅读全部会议材料，效率极低</li>
+<li>不敢把内部材料上传外部 AI 工具，担心商业秘密 / 工作秘密泄露</li>
+<li>宣发需要抓重点、抓精神、抓传播点，普通纪要无法直接发布</li></ul>
+<h3>产品核心定位</h3><div class="quote">面向全行业公众号运营人员的会议宣发 AI 助手：本地处理会议材料，不上云、不外泄，自动整理提炼，一键生成安全合规、重点突出的公众号宣发稿。</div>
+<h3>产品成立判据</h3><ul>
+<li>✅ 全行业 90% 以上单位都有会议宣发需求</li>
+<li>✅ 安全保密是所有用户的底线刚需</li>
+<li>✅ 技术可实现：本地解析、本地提炼、本地生成</li>
+<li>✅ 市场无同类「安全 + 整理 + 宣发」一体化产品</li></ul>
+<h3>产品边界</h3><ul>
+<li>不替代人工审核、保密审查与三审三校</li>
+<li>数据不上外网</li>
+<li>只做：材料整理 + 风险提示 + 宣发初稿生成</li></ul>`},
+{title:'产品运转方式', html:`
+<h3>核心流程</h3><div class="quote">上传会议材料 → AI 本地解析 → 自动提炼会议核心 → 敏感信息提示 → 人工确认 → 一键生成公众号宣发稿</div>
+<h3>模块 1 · 会议材料上传</h3><p>支持发言稿、纪要、图片（板书 / PPT / 笔记照片）、文字笔记、内部文档，全部本地处理，不上传云端。</p>
+<h3>模块 2 · AI 自动解析与提炼</h3><p>解析文档与图片 OCR、整合多份材料，自动提取会议主题、核心决策、重点工作部署、领导强调内容、会议精神与宣发重点。</p>
+<h3>模块 3 · 敏感内容识别提示</h3><p>识别商业秘密（未公开战略、内部数据、敏感方案）、内部敏感信息、机关单位疑似敏感内容。<b>AI 只提示，不做决策。</b></p>
+<h3>模块 4 · 人工确认可宣发素材池</h3><p>用户筛选保留 / 剔除 / 编辑 / 补充，<b>只有人工确认，才能进入生成环节。</b></p>
+<h3>模块 5 · 一键生成公众号宣发稿</h3><p>生成标题、导语、重点段落与清晰排版，符合公众号传播逻辑，<b>不编造、不扩展、不脑补。</b></p>
+<h3>模块 6 · 溯源查看 + 合规留痕</h3><p>每段内容可查看原始材料来源、会议原文与风险提示记录，满足企业合规与三审三校要求。</p>
+<h3>人与 AI 分工</h3><ul>
+<li>人负责：上传材料、确认可发布内容、最终审核发布、承担保密与合规责任</li>
+<li>AI 负责：解析多类型材料、整合提炼、提示敏感内容、生成初稿、保留来源溯源</li></ul>`},
+{title:'产品策略', html:`
+<h3>典型场景（全行业通用）</h3><p>某单位召开工作会议，宣传 / 运营人员需要从发言稿、纪要、笔记、图片等材料中生成一篇公众号宣发稿：快速出稿、突出会议精神与重点工作、不泄露秘密、符合公众号文风。</p>
+<h3>完整业务流程</h3><ul>
+<li><b>Step 1 上传会议材料</b> —— 发言稿 / 纪要 / 图片 / 笔记，全程本地处理</li>
+<li><b>Step 2 AI 解析整合</b> —— 提取主题、梳理内容、提炼决策、识别重点部署、抓取会议精神、标记宣发重点</li>
+<li><b>Step 3 敏感内容提示</b> —— 未公开策略、敏感数据、未官宣事项、内部讨论，标黄提示「建议人工复核」</li>
+<li><b>Step 4 人工筛选素材池</b> —— 保留可公开、剔除不宜公开、可补充修改，形成可宣发素材池</li>
+<li><b>Step 5 一键生成宣发稿</b> —— 正式标题 + 会议精神导语 + 重点工作段落，完全基于材料，不编造不扩展</li>
+<li><b>Step 6 审核发布</b> —— 用户检查 → 领导审核 → 发布公众号，全程高效、安全、合规</li></ul>`},
+{title:'价值衡量（含加分项）', html:`
+<h3>一、产品价值衡量指标</h3><ul>
+<li><b>效率</b>：材料整理时间减少 80% 以上；宣发稿出稿速度提升 70% 以上</li>
+<li><b>安全</b>：数据不上云端；敏感内容提示覆盖率高；有效降低泄密风险</li>
+<li><b>宣发质量</b>：会议精神抓取准确、重点突出、结构符合传播逻辑、稿件可直接使用率高</li></ul>
+<h3>二、「看似通顺但不能发布」的信号</h3><ul>
+<li>包含未公开的内部策略、方案</li><li>包含敏感数据、未官宣信息</li><li>包含内部讨论、不宜对外内容</li>
+<li>内容偏离会议原意</li><li>过度扩展、脑补、编造信息</li></ul>
+<p>AI 自动提示，由人最终判断。</p>
+<h3>三、加分项设计</h3>
+<div class="quote"><b>1. 三层隔离机制</b>：原始材料 → 人工筛选 → 素材池 → 生成。生成模块只能读取人工确认后的内容，从架构上禁止模型私取未放行片段。</div>
+<div class="quote"><b>2. AI 只提示，不决策</b>：风险标签永久跟随对应生成段落，复审持续可见。</div>
+<div class="quote"><b>3. 悬浮即时溯源</b>：鼠标悬浮任意 AI 生成段落，弹出悬浮来源面板 —— 展示原始原文（音频可回放时间轴片段）、历史风险标记，hover 即可对照「AI 改写 VS 原始素材」，快速发现语义偏移。</div>
+<div class="quote"><b>4. 一键替换</b>：发现 AI 润色偏离本意，一键替换为素材池内原始文本；替换动作写入操作日志（时间、替换前后文本、来源）。高风险隔离片段不允许被调用替换。</div>
+<div class="quote"><b>5. 事实与润色分离</b>：事实层绑定来源与风险标记；润色层只优化表达，不新增业务事实。</div>
+<div class="quote"><b>6. 全程溯源留痕</b>：满足民企合规、政企三审三校与审计备查要求。</div>
+<div class="quote"><b>7. 覆盖最广泛用户</b>：民企防商业泄密，政企防敏感信息泄露 —— 一款产品，满足全行业会议宣发刚需。</div>`},
+];
+
+/* =========================================================
+   状态
+========================================================= */
+const state = {
+  uploaded:false, parsed:false, parsedShown:false,
+  included:{...DEFAULT_INCLUDED},
+  rawText:{}, replaced:{},
+  maxStep:1, cur:1, log:[], generatedAt:null,
+};
+function now(){const d=new Date();const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;}
+function logAct(op,obj,detail){state.log.unshift({t:now(),op,obj,detail});}
+
+const STEPS = ['上传会议材料','AI 解析提炼','敏感内容提示','素材池确认','生成宣发稿','溯源与留痕'];
+
+/* =========================================================
+   视图切换
+========================================================= */
+function showView(v){
+  ['home','demo','docs'].forEach(k=>{
+    document.getElementById('view-'+k).classList.toggle('active', k===v);
+    document.getElementById('tab-'+k).classList.toggle('active', k===v);
+  });
+  hideTrace();
+  if(v==='demo') renderStepper();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showDoc(i){
+  document.querySelectorAll('.doc-tabs button').forEach((b,j)=>b.classList.toggle('active', j===i));
+  const d=DOCS[i];
+  document.getElementById('doc-body').innerHTML = `<h2>${d.title}</h2>${d.html}`;
+}
+
+/* =========================================================
+   步骤条
+========================================================= */
+function renderStepper(){
+  const el=document.getElementById('stepper');
+  el.innerHTML = STEPS.map((s,i)=>{
+    const n=i+1;
+    let cls='step-item';
+    if(n<state.cur) cls+=' done'; else if(n===state.cur) cls+=' current'; else if(n>state.maxStep) cls+=' locked';
+    const mark = n<state.cur ? '✓' : n;
+    return `<button class="${cls}" onclick="goStep(${n})"><span class="cir">${mark}</span><span class="lbl">${s}</span></button>`;
+  }).join('');
+}
+function goStep(n){
+  if(n>state.maxStep) return;
+  state.cur=n; hideTrace(); renderStepper(); renderPanel();
+  document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* =========================================================
+   各步骤渲染
+========================================================= */
+function renderPanel(){
+  const p=document.getElementById('panel');
+  ({1:renderStep1,2:renderStep2,3:renderStep3,4:renderStep4,5:renderStep5,6:renderStep6})[state.cur](p);
+}
+
+/* ---- Step 1 上传 ---- */
+function renderStep1(p){
+  p.innerHTML = `
+  <div class="panel-head">
+    <div><h2><span class="stepno">1</span>上传会议材料</h2><div class="sub">支持发言稿、纪要、图片（OCR）、笔记、内部文档 —— 全部本地处理，不上传云端</div></div>
+  </div>
+  <div class="dropzone">📦 演示环境：点击下方「一键导入示例材料」，模拟本地拖拽上传（真实版本支持拖拽 / 多选文件）</div>
+  <div class="mat-grid">
+    ${MATERIALS.map(m=>`
+      <div class="mat-card" id="mat-${m.id}">
+        <span class="ico">${m.icon}</span>
+        <div><h4>${m.name}</h4><p>${m.desc} · ${m.type}</p></div>
+        <span class="ok" style="display:none;">✓ 已导入</span>
+      </div>`).join('')}
+  </div>
+  <div class="safe-note">🔒 <span><b>本地处理承诺：</b>所有材料仅在您的设备上解析，不经过任何外部服务器。AI 提示敏感内容，保密决策权始终在人。</span></div>
+  <div class="panel-actions">
+    <button class="btn btn-primary" id="btn-import" onclick="importMats()">一键导入示例材料</button>
+    <button class="btn btn-primary" id="btn-go2" onclick="finishUpload()" disabled>确认材料，开始 AI 解析 →</button>
+  </div>`;
+}
+function importMats(){
+  MATERIALS.forEach((m,i)=>setTimeout(()=>{
+    document.querySelector(`#mat-${m.id} .ok`).style.display='inline-flex';
+    document.getElementById(`mat-${m.id}`).style.borderColor='#bfe3cf';
+  }, i*260));
+  document.getElementById('btn-import').disabled=true;
+  document.getElementById('btn-import').textContent='✓ 已导入 4 份材料';
+  setTimeout(()=>{document.getElementById('btn-go2').disabled=false;}, MATERIALS.length*260+200);
+}
+function finishUpload(){
+  state.uploaded=true; state.maxStep=Math.max(state.maxStep,2); logAct('上传材料','4 份会议材料','总经理发言稿.docx · 会议纪要.pdf · 会议板书照片.jpg · 宣传岗速记笔记.txt（全部本地处理）');
+  goStep(2);
+}
+
+/* ---- Step 2 解析 ---- */
+const PARSE_LINES=[
+  '解析 4 份本地材料（文档 ×2 · 图片 ×1 · 笔记 ×1）',
+  'OCR 识别会议板书照片文字',
+  '整合多源材料，统一会议内容',
+  '提取会议主题 / 核心决策 / 重点工作 / 会议精神',
+  '扫描敏感与不宜公开内容，生成风险标记',
+];
+function renderStep2(p){
+  p.innerHTML=`
+  <div class="panel-head">
+    <div><h2><span class="stepno">2</span>AI 自动解析与会议信息提炼</h2><div class="sub">本地解析 · 多源整合 · 自动提取宣发要素</div></div>
+  </div>
+  <div class="parse-box" id="parse-box">
+    <div class="progress"><i id="parse-bar"></i></div>
+    <div id="parse-lines">${PARSE_LINES.map(t=>`<div class="parse-line"><span class="st"></span>${t}</div>`).join('')}</div>
+  </div>
+  <div class="meeting-info" id="meeting-info" style="display:none;"></div>
+  <div class="panel-actions" id="s2-actions" style="display:none;">
+    <button class="btn btn-primary" onclick="state.maxStep=Math.max(state.maxStep,3);goStep(3)">下一步：查看敏感内容提示 →</button>
+  </div>`;
+  if(state.parsedShown){ showParseResult(); return; }
+  const lines=[...p.querySelectorAll('.parse-line')];
+  lines.forEach((l,i)=>{
+    setTimeout(()=>{ l.classList.add('doing'); document.getElementById('parse-bar').style.width=((i+1)/PARSE_LINES.length*100)+'%'; }, i*650);
+    setTimeout(()=>{ l.classList.remove('doing'); l.classList.add('done'); l.querySelector('.st').textContent='✓'; }, i*650+580);
+  });
+  setTimeout(()=>{ state.parsed=true; state.parsedShown=true; logAct('AI 解析','4 份材料','本地完成解析与提炼：提取会议主题、核心决策 3 项、重点部署 2 项、宣传口径 3 关键词；标记敏感片段 3 处'); showParseResult(); }, PARSE_LINES.length*650+500);
+}
+function showParseResult(){
+  document.querySelectorAll('#parse-lines .parse-line').forEach(l=>{l.classList.remove('doing');l.classList.add('done');l.querySelector('.st').textContent='✓';});
+  document.getElementById('parse-bar').style.width='100%';
+  const mi=document.getElementById('meeting-info');
+  mi.style.display='block';
+  mi.innerHTML=`
+  <h3>会议基本信息</h3>
+  <div class="mi-grid">
+    <div class="mi-cell"><b>会议主题</b>公司 2026 年四季度经营工作会议</div>
+    <div class="mi-cell"><b>时间形式</b>10 月 21 日 · 现场 + 视频分会场</div>
+    <div class="mi-cell"><b>参会人员</b>管理层及各部门负责人</div>
+  </div>
+  <h3>核心决策</h3>
+  <ul class="clean">
+    <li>四季度启动「区域深耕计划」，西南、华中新设 6 个服务网点</li>
+    <li>新一代产品「灵犀 2.0」定档 12 月 18 日正式发布</li>
+    <li>明确「战略聚焦、稳健增长、产品升级」三大对外关键词</li>
+  </ul>
+  <h3>重点工作部署</h3>
+  <ul class="clean">
+    <li>全员聚焦四季度关键经营指标，冲刺年度任务</li>
+    <li>重点服务中小企业数字化转型，提升区域交付能力</li>
+  </ul>
+  <h3>会议精神（领导强调）</h3>
+  <ul class="clean"><li>坚持以客户为中心、以质量为生命线、以人才为第一资源</li></ul>
+  <h3>适合宣发的重点信息</h3>
+  <ul class="clean"><li>三季度新签客户 128 家（可对外口径）· 灵犀 2.0 发布 · 三大战略关键词</li></ul>`;
+  document.getElementById('s2-actions').style.display='flex';
+}
+
+/* ---- Step 3 敏感提示 ---- */
+function renderStep3(p){
+  const risky=SEGMENTS.filter(s=>s.risk);
+  p.innerHTML=`
+  <div class="panel-head">
+    <div><h2><span class="stepno">3</span>敏感内容识别提示</h2><div class="sub">AI 扫描全部材料，标黄提示建议人工复核的内容</div></div>
+  </div>
+  ${risky.map(s=>`
+  <div class="risk-card ${s.blocked?'lock':''}">
+    <div class="risk-top"><h4>⚠ ${s.label}</h4>${s.risk.map(r=>`<span class="tag ${s.blocked?'risk-high':'risk'}">${r}</span>`).join('')}<span class="tag src">来源：${MAT_NAME[s.src]}（${MAT_TYPE[s.src]}）</span></div>
+    <p class="raw">${s.raw}</p>
+    <div class="adv ${s.blocked?'lock':''}">${s.blocked?'🚫 AI 建议：内部讨论内容，风险较高 —— 已置于<b>高风险隔离区</b>，不进入素材池与生成环节，仅留存备查。':'💡 AI 建议：该内容包含未公开信息，建议人工复核是否适合对外发布。是否剔除由您决定。'}</div>
+  </div>`).join('')}
+  <div class="ai-note">🤖 <span><b>AI 只提示，不决策。</b>是否「可发 / 不可发」始终由人工判断。即使某片段被保留进入素材池，其风险标签也会永久跟随生成的段落，复审时持续可见 —— 下一步您将看到这一机制。</span></div>
+  <div class="panel-actions">
+    <button class="btn btn-outline btn-sm" onclick="goStep(2)">← 上一步</button>
+    <button class="btn btn-primary" onclick="state.maxStep=Math.max(state.maxStep,4);logAct('风险提示','敏感片段 3 处','商业秘密 ×1 · 内部数据 ×1 · 内部讨论 ×1；其中 1 处进入高风险隔离区');goStep(4)">下一步：人工确认素材池 →</button>
+  </div>`;
+}
+
+/* ---- Step 4 素材池 ---- */
+function renderStep4(p){
+  const cnt=()=>Object.values(state.included).filter(Boolean).length;
+  p.innerHTML=`
+  <div class="panel-head">
+    <div><h2><span class="stepno">4</span>人工确认可宣发素材池</h2><div class="sub">只有进入素材池的内容，才会被生成模块读取 —— 三层隔离，从架构上杜绝模型私取未放行片段</div></div>
+  </div>
+  <div id="pool-list">${SEGMENTS.map(s=>{
+    if(s.blocked) return `
+    <div class="pool-row blocked">
+      <div class="pool-top"><span class="cb" style="visibility:hidden;">🔒</span><h4>${s.label}</h4><span class="tag risk-high">🚫 高风险隔离</span><span class="tag src">来源：${MAT_NAME[s.src]}（${MAT_TYPE[s.src]}）</span></div>
+      <p class="raw">${s.raw}</p>
+      <div class="lock-note">🔒 该片段为内部讨论内容，已被隔离：不可进入素材池、不可生成、不可用于替换。</div>
+    </div>`;
+    const inc=state.included[s.id];
+    return `
+    <div class="pool-row ${inc?'in':''}" id="pool-${s.id}">
+      <div class="pool-top">
+        <input type="checkbox" class="cb" ${inc?'checked':''} onchange="togglePool('${s.id}')">
+        <h4>${s.label}</h4>
+        ${s.risk?s.risk.map(r=>`<span class="tag risk">${r}</span>`).join(''):'<span class="tag ok">✓ 无风险标记</span>'}
+        <span class="tag src">来源：${MAT_NAME[s.src]}（${MAT_TYPE[s.src]}）</span>
+        <span class="spacer"></span>
+        <button class="link-btn" onclick="editRaw('${s.id}')">✏️ 编辑原文</button>
+      </div>
+      <p class="raw" id="raw-view-${s.id}">${state.rawText[s.id]||s.raw}</p>
+      <textarea id="raw-edit-${s.id}" style="display:none;" onchange="saveRaw('${s.id}',this.value)">${state.rawText[s.id]||s.raw}</textarea>
+    </div>`;}).join('')}
+  </div>
+  <div class="pool-sum">
+    <span>当前素材池：<b id="pool-cnt">${cnt()}</b> 条</span><span class="sep">|</span>
+    <span id="pool-risk-cnt">含历史风险标记 ${SEGMENTS.filter(s=>s.risk&&state.included[s.id]).length} 条（标签将永久跟随生成段落）</span><span class="sep">|</span>
+    <span>高风险隔离 1 条（不可用）</span>
+  </div>
+  <div class="panel-actions">
+    <button class="btn btn-outline btn-sm" onclick="goStep(3)">← 上一步</button>
+    <button class="btn btn-primary" id="btn-gen" onclick="finishPool()" ${cnt()?'':'disabled'}>确认素材池，一键生成宣发稿 →</button>
+  </div>`;
+}
+function togglePool(id){
+  state.included[id]=!state.included[id];
+  const row=document.getElementById('pool-'+id);
+  row.classList.toggle('in',state.included[id]);
+  const n=Object.values(state.included).filter(Boolean).length;
+  document.getElementById('pool-cnt').textContent=n;
+  document.getElementById('pool-risk-cnt').textContent=`含历史风险标记 ${SEGMENTS.filter(s=>s.risk&&state.included[s.id]).length} 条（标签将永久跟随生成段落）`;
+  document.getElementById('btn-gen').disabled = n===0;
+}
+function editRaw(id){
+  document.getElementById('raw-view-'+id).style.display='none';
+  document.getElementById('raw-edit-'+id).style.display='block';
+  document.getElementById('raw-edit-'+id).focus();
+}
+function saveRaw(id,v){
+  state.rawText[id]=v.trim();
+  document.getElementById('raw-view-'+id).textContent=state.rawText[id];
+  document.getElementById('raw-view-'+id).style.display='block';
+  document.getElementById('raw-edit-'+id).style.display='none';
+  logAct('编辑原文',SEGMENTS.find(s=>s.id===id).label,'用户手动修订素材池原文');
+}
+function finishPool(){
+  const keep=SEGMENTS.filter(s=>state.included[s.id]);
+  state.maxStep=Math.max(state.maxStep,5);
+  logAct('确认素材池',`保留 ${keep.length} 条 / 剔除 ${SEGMENTS.filter(s=>!s.blocked&&!state.included[s.id]).length} 条`, keep.map(s=>s.label).join(' · ')+'；高风险片段不可进入生成环节');
+  goStep(5);
+}
+
+/* ---- Step 5 生成宣发稿 ---- */
+const ORDER=['s1','s2','s5','s6','s8','s3','s4'];
+function renderStep5(p){
+  p.innerHTML=`
+  <div class="panel-head">
+    <div><h2><span class="stepno">5</span>一键生成公众号宣发稿</h2><div class="sub">仅基于素材池生成 · 不编造、不扩展、不脑补 · 每段可溯源</div></div>
+  </div>
+  <div class="gen-cover" id="gen-cover" style="position:relative;">
+    <div class="veil" id="gen-veil"><span>✍️ AI 正在基于素材池生成稿件…</span></div>
+    <div class="wxa">
+      <div class="wxa-head"><span class="avatar">科</span><div class="meta"><b>XX 科技</b><span>企业官方公众号 · 刚刚</span></div></div>
+      <div class="wxa-body">
+        <h1 class="title">${TITLE}</h1>
+        <div class="meta-line">原创 · XX 科技宣传岗 · 阅读预计 2 分钟</div>
+        <div class="lead"><b>导语 ｜</b> ${LEAD}</div>
+        <div id="art-body"></div>
+      </div>
+      <div class="wxa-foot">🛡️ 本稿完全基于人工确认素材池生成 · 全部事实段落绑定来源 · 未放行片段在架构上不可被模型读取</div>
+    </div>
+  </div>
+  <div class="hover-hint">👆 <b>试一试：</b>鼠标悬浮在正文任意段落上 —— 弹出「悬浮溯源面板」，对照 AI 改写与原始素材，并可一键替换回原文（模块 6 见下一步）</div>
+  <div class="gen-note">🧩 <span><b>事实与润色分离：</b>事实层全部来自素材池并绑定来源与风险标记；润色层仅优化句式与排版。若您在素材池保留了带历史风险标记的片段（如四季度营收目标），该段会永久携带 ⚠ 风险标签 —— 这正是「AI 只提示、风险不消失」的设计。</span></div>
+  <div class="panel-actions">
+    <button class="btn btn-outline btn-sm" onclick="goStep(4)">← 返回调整素材池</button>
+    <button class="btn btn-primary" id="btn-go6" style="display:none;" onclick="state.maxStep=Math.max(state.maxStep,6);goStep(6)">下一步：溯源与合规留痕 →</button>
+  </div>`;
+  if(state.generatedAt){ renderArticle(); document.getElementById('gen-veil').style.display='none'; document.getElementById('btn-go6').style.display='inline-flex'; }
+  else setTimeout(runGenerate, 300);
+}
+function runGenerate(){
+  setTimeout(()=>{ state.generatedAt=now(); logAct('生成宣发稿','公众号初稿',`基于素材池 ${Object.values(state.included).filter(Boolean).length} 条片段生成；标题与导语符合公众号传播逻辑`); renderArticle(); const v=document.getElementById('gen-veil'); if(v) v.style.display='none'; const b=document.getElementById('btn-go6'); if(b) b.style.display='inline-flex'; }, 1300);
+}
+function renderArticle(){
+  const body=document.getElementById('art-body'); if(!body) return;
+  body.innerHTML = ORDER.filter(id=>state.included[id]).map(id=>{
+    const s=SEGMENTS.find(x=>x.id===id);
+    const chips = s.risk? s.risk.map(r=>`<span class="risk-chip" title="历史风险标记永久跟随该段落">⚠ 曾标记：${r}</span>`).join(''):'';
+    const restored = state.replaced[id]? '<span class="restored-chip">✓ 已还原素材池原文</span>':'';
+    const text = state.replaced[id] ? (state.rawText[id]||s.raw) : s.ai;
+    return `<p class="art-p ${state.replaced[id]?'replaced':''}" data-seg="${id}" onmouseenter="showTrace('${id}',this)" onmouseleave="hideTrace()">${chips}${restored}${text}</p>`;
+  }).join('');
+}
+
+/* ---- 悬浮溯源面板 ---- */
+function showTrace(id, el){
+  const s=SEGMENTS.find(x=>x.id===id);
+  const raw=state.rawText[id]||s.raw;
+  const tp=document.getElementById('trace-panel');
+  tp.innerHTML=`
+    <button class="tp-close" onclick="hideTrace()">✕</button>
+    <div class="tp-head"><b>🔍 溯源 ｜ ${s.label}</b><span class="tag src">来源：${MAT_NAME[s.src]}（${MAT_TYPE[s.src]}）</span></div>
+    <div class="tp-sec">原始素材池原文（人工确认版）</div>
+    <div class="tp-raw">${raw}</div>
+    <div class="tp-sec">历史 AI 风险标记</div>
+    <div>${s.risk? s.risk.map(r=>`<span class="tag risk">⚠ ${r}</span>`).join(' ') : '<span class="tag ok">✓ 无风险标记</span>'}</div>
+    <div class="tp-actions">
+      ${state.replaced[id]
+        ? '<button class="btn btn-ghost btn-sm" disabled>✓ 已还原原文</button>'
+        : `<button class="btn btn-primary btn-sm" onclick="replaceSeg('${id}')">↩ 一键替换为原始文本</button>`}
+      <button class="btn btn-outline btn-sm" onclick="goStep(6)">查看操作日志</button>
+    </div>
+    <div style="margin-top:10px;font-size:11.5px;color:var(--ink-3);">替换仅可调用已进入素材池的内容；高风险隔离片段不允许被调用替换，动作将写入操作日志。</div>`;
+  tp.style.display='block';
+  const host=document.getElementById('gen-cover');
+  const hostRect=host.getBoundingClientRect();
+  const r=el.getBoundingClientRect();
+  let left=r.left-hostRect.left; 
+  const w=Math.min(440, hostRect.width*0.92);
+  left=Math.max(0, Math.min(left, hostRect.width-w));
+  let top=r.bottom-hostRect.top+6;
+  tp.style.left=left+'px'; tp.style.top=top+'px'; tp.style.width=w+'px';
+}
+function hideTrace(){const tp=document.getElementById('trace-panel'); if(tp){tp.style.display='none';}}
+function replaceSeg(id){
+  const s=SEGMENTS.find(x=>x.id===id);
+  const raw=state.rawText[id]||s.raw;
+  const aiText=s.ai;
+  state.replaced[id]=true;
+  logAct('一键替换',s.label,`替换前（AI 润色）：${aiText} ←→ 替换后（素材池原文）：${raw} ｜ 来源：${MAT_NAME[s.src]}`);
+  renderArticle();
+  const p=document.querySelector(`.art-p[data-seg="${id}"]`);
+  if(p) showTrace(id,p);
+}
+
+/* ---- Step 6 留痕 ---- */
+function renderStep6(p){
+  p.innerHTML=`
+  <div class="panel-head">
+    <div><h2><span class="stepno">6</span>溯源查看 + 合规留痕</h2><div class="sub">每段可回溯原始材料 · 所有确认与替换操作完整记录 · 满足三审三校与审计备查</div></div>
+  </div>
+  <div class="tripart">
+    <div class="tp-item"><b>🛡️ 三层隔离</b><span>原始材料</span> <span class="arrow">→</span> <span>人工筛选</span> <span class="arrow">→</span> <span>素材池</span> <span class="arrow">→</span> <span>生成</span>；高风险片段在隔离区不可调用。</div>
+    <div class="tp-item"><b>🤖 AI 只提示，不决策</b>风险标签永久跟随生成段落，即使进入素材池，复审依然可见，不在生成环节消失。</div>
+    <div class="tp-item"><b>📋 全程留痕</b>素材池确认、原文编辑、稿件生成、一键替换全部写入操作日志，不可篡改。</div>
+  </div>
+  <table class="log-table">
+    <thead><tr><th style="width:150px;">时间</th><th style="width:110px;">操作</th><th style="width:150px;">对象</th><th>详情</th></tr></thead>
+    <tbody id="log-body"></tbody>
+  </table>
+  <div class="panel-actions">
+    <button class="btn btn-outline btn-sm" onclick="goStep(5)">← 返回稿件（可继续悬浮溯源 / 一键替换）</button>
+    <button class="btn btn-primary" onclick="resetDemo()">↺ 重新完整演示一遍</button>
+  </div>`;
+  renderLog();
+}
+function renderLog(){
+  const tb=document.getElementById('log-body'); if(!tb) return;
+  tb.innerHTML = state.log.length? state.log.map(l=>`<tr><td>${l.t}</td><td class="op">${l.op}</td><td>${l.obj}</td><td>${l.detail}</td></tr>`).join('') : '<tr><td colspan="4" class="log-empty">暂无记录</td></tr>';
+}
+function resetDemo(){
+  state.uploaded=false; state.parsed=false; state.parsedShown=false;
+  state.included={...DEFAULT_INCLUDED}; state.rawText={}; state.replaced={};
+  state.maxStep=1; state.cur=1; state.log=[]; state.generatedAt=null;
+  hideTrace(); goStep(1);
+}
+
+/* init */
+showDoc(0);
+renderStepper(); renderPanel();
+</script>
+</body>
+</html>
